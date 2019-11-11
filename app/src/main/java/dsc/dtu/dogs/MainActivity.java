@@ -9,6 +9,8 @@ import android.os.Bundle;
 import android.util.Log;
 import android.widget.Toast;
 
+import javax.inject.Inject;
+
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.disposables.CompositeDisposable;
 import io.reactivex.disposables.Disposable;
@@ -23,8 +25,13 @@ public class MainActivity extends AppCompatActivity {
     private RecyclerView dogsRecyclerView;
     private DogsAdapter dogsAdapter;
 
+    @Inject MainViewModelFactory viewModelFactory;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+
+        ((DogsApplication) getApplication()).appComponent.inject(this);
+
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
@@ -49,10 +56,8 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void setupViewModel() {
-        mainViewModel = new ViewModelProvider(
-                this,
-                new MainViewModel.MainViewModelFactory()
-        ).get(MainViewModel.class);
+        ViewModelProvider provider = new ViewModelProvider(this, viewModelFactory);
+        mainViewModel = provider.get(MainViewModel.class);
     }
 
     private void subscribeToImages() {

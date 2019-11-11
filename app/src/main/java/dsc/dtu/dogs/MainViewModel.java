@@ -8,6 +8,8 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
+import javax.inject.Inject;
+
 import io.reactivex.disposables.CompositeDisposable;
 import io.reactivex.disposables.Disposable;
 import io.reactivex.schedulers.Schedulers;
@@ -23,6 +25,7 @@ public class MainViewModel extends ViewModel {
     @NonNull
     public final BehaviorSubject<List<String>> dogImages;
 
+    @Inject
     public MainViewModel(@NonNull RandomImagesUseCase usecase) {
         this.usecase = usecase;
         this.compositeDisposable = new CompositeDisposable();
@@ -47,15 +50,5 @@ public class MainViewModel extends ViewModel {
     protected void onCleared() {
         super.onCleared();
         compositeDisposable.clear();
-    }
-
-    static class MainViewModelFactory implements ViewModelProvider.Factory {
-
-        @SuppressWarnings("unchecked")
-        @NonNull
-        @Override
-        public <T extends ViewModel> T create(@NonNull Class<T> modelClass) {
-            return (T) new MainViewModel(Provider.usecase);
-        }
     }
 }

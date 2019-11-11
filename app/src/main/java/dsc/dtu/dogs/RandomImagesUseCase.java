@@ -4,6 +4,8 @@ import android.util.Log;
 
 import androidx.annotation.NonNull;
 
+import javax.inject.Inject;
+
 import dsc.dtu.dogs.api.DogsService;
 import io.reactivex.Flowable;
 import io.reactivex.schedulers.Schedulers;
@@ -15,6 +17,7 @@ public class RandomImagesUseCase {
     @NonNull
     private final DogsService dogsService;
 
+    @Inject
     public RandomImagesUseCase(@NonNull DogsService dogsService) {
         this.dogsService = dogsService;
     }

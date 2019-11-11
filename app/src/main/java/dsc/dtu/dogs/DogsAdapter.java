@@ -13,6 +13,7 @@ import androidx.recyclerview.widget.ListAdapter;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
+import com.bumptech.glide.load.resource.drawable.DrawableTransitionOptions;
 
 public class DogsAdapter extends ListAdapter<String, DogsAdapter.DogViewHolder> {
 
@@ -47,6 +48,7 @@ public class DogsAdapter extends ListAdapter<String, DogsAdapter.DogViewHolder> 
             if (!TextUtils.isEmpty(url)) {
                 Glide.with(itemView)
                         .load(url)
+                        .transition(new DrawableTransitionOptions().crossFade())
                         .into(imageView);
             }
         }
