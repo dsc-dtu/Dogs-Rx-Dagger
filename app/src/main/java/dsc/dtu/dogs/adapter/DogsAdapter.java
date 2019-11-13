@@ -1,4 +1,4 @@
-package dsc.dtu.dogs;
+package dsc.dtu.dogs.adapter;
 
 import android.text.TextUtils;
 import android.view.LayoutInflater;
@@ -15,8 +15,13 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.resource.drawable.DrawableTransitionOptions;
 
+import javax.inject.Inject;
+
+import dsc.dtu.dogs.R;
+
 public class DogsAdapter extends ListAdapter<String, DogsAdapter.DogViewHolder> {
 
+    @Inject
     public DogsAdapter(@NonNull DiffUtil.ItemCallback<String> diffCallback) {
         super(diffCallback);
     }
@@ -35,8 +40,8 @@ public class DogsAdapter extends ListAdapter<String, DogsAdapter.DogViewHolder> 
 
     class DogViewHolder extends RecyclerView.ViewHolder {
 
-        ImageView imageView;
-        ProgressBar progressBar;
+        final ImageView imageView;
+        final ProgressBar progressBar;
 
         DogViewHolder(@NonNull View itemView) {
             super(itemView);
@@ -51,19 +56,6 @@ public class DogsAdapter extends ListAdapter<String, DogsAdapter.DogViewHolder> 
                         .transition(new DrawableTransitionOptions().crossFade())
                         .into(imageView);
             }
-        }
-    }
-
-    static class DogDiffer extends DiffUtil.ItemCallback<String> {
-
-        @Override
-        public boolean areItemsTheSame(@NonNull String oldItem, @NonNull String newItem) {
-            return oldItem.equals(newItem);
-        }
-
-        @Override
-        public boolean areContentsTheSame(@NonNull String oldItem, @NonNull String newItem) {
-            return oldItem.equals(newItem);
         }
     }
 }

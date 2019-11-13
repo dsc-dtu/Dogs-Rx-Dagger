@@ -1,36 +1,37 @@
 package dsc.dtu.dogs;
 
+import android.os.Bundle;
+
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.LinearSnapHelper;
 import androidx.recyclerview.widget.RecyclerView;
-
-import android.os.Bundle;
-import android.util.Log;
-import android.widget.Toast;
 
 import javax.inject.Inject;
 
-import io.reactivex.android.schedulers.AndroidSchedulers;
+import dsc.dtu.dogs.adapter.DogsAdapter;
 import io.reactivex.disposables.CompositeDisposable;
 import io.reactivex.disposables.Disposable;
 
 public class MainActivity extends AppCompatActivity {
 
-    private static final String TAG = "MainActivity";
+    private final CompositeDisposable compositeDisposable = new CompositeDisposable();
+
+    @Inject
+    DogsAdapter dogsAdapter;
+
+    @Inject
+    MainViewModelFactory viewModelFactory;
 
     private MainViewModel mainViewModel;
-    private CompositeDisposable compositeDisposable = new CompositeDisposable();
-
-    private RecyclerView dogsRecyclerView;
-    private DogsAdapter dogsAdapter;
-
-    @Inject MainViewModelFactory viewModelFactory;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
 
-        ((DogsApplication) getApplication()).appComponent.inject(this);
+        ((DogsApplication) getApplication())
+                .appComponent
+                .inject(this);
 
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
@@ -49,10 +50,10 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void setupRecyclerView() {
-        dogsRecyclerView = findViewById(R.id.dogsRv);
-        dogsAdapter = new DogsAdapter(new DogsAdapter.DogDiffer());
+        RecyclerView dogsRecyclerView = findViewById(R.id.dogsRv);
         dogsRecyclerView.setAdapter(dogsAdapter);
-        dogsRecyclerView.setLayoutManager(new LinearLayoutManager(this));
+        dogsRecyclerView.setLayoutManager(new LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false));
+        new LinearSnapHelper().attachToRecyclerView(dogsRecyclerView);
     }
 
     private void setupViewModel() {
@@ -63,15 +64,7 @@ public class MainActivity extends AppCompatActivity {
     private void subscribeToImages() {
         Disposable disposable = mainViewModel
                 .dogImages
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(
-                        images -> dogsAdapter.submitList(images),
-                        error -> {
-                            Log.d(TAG, "Error occurred");
-                            error.printStackTrace();
-                            Toast.makeText(this, error.getLocalizedMessage(), Toast.LENGTH_SHORT).show();
-                        }
-                );
+                .subscribe(images -> dogsAdapter.submitList(images));
 
         compositeDisposable.add(disposable);
     }

@@ -1,43 +1,33 @@
 package dsc.dtu.dogs.di;
 
+import androidx.recyclerview.widget.DiffUtil;
+
+import dagger.Binds;
 import dagger.Module;
-import dagger.Provides;
-import dsc.dtu.dogs.api.DogsService;
-import okhttp3.OkHttpClient;
-import okhttp3.logging.HttpLoggingInterceptor;
-import retrofit2.Retrofit;
-import retrofit2.adapter.rxjava2.RxJava2CallAdapterFactory;
-import retrofit2.converter.moshi.MoshiConverterFactory;
+import dsc.dtu.dogs.adapter.DogDiffer;
 
+/**
+ * A Dagger module which binds the DogDiffer class to the interface DiffUtil.ItemCallback<String>
+ *
+ * Binding this dependency here tells Dagger to provide an instance of DogDiffer to any class
+ * requesting DiffUtil.ItemCallback<String> as a dependency.
+ *
+ * An alternative way of doing this would be to use a @Provides method instead of @Binds. It would
+ * look something like this:
+ *
+ * @Provides
+ * static DiffUtil.ItemCallback<String> provideDiffCallback() {
+ *     return new DogDiffer();
+ * }
+ *
+ * The @Provides method would work too. However, in the cases when we just need to bind an
+ * interface (DiffUtil.ItemCallback) to its implementation (DogDiffer), @Binds is a more efficient
+ * method of doing so.
+ */
 @Module
-public class AppModule {
+public interface AppModule {
 
-    @Provides
-    public static HttpLoggingInterceptor provideLogger() {
-        HttpLoggingInterceptor logger = new HttpLoggingInterceptor();
-        logger.level(HttpLoggingInterceptor.Level.BODY);
-        return logger;
-    }
+    @Binds
+    DiffUtil.ItemCallback<String> bindDiffCallback(DogDiffer dogDiffer);
 
-    @Provides
-    public static OkHttpClient provideOkHttp(HttpLoggingInterceptor logger) {
-        return new OkHttpClient.Builder()
-                .addInterceptor(logger)
-                .build();
-    }
-
-    @Provides
-    public static Retrofit provideRetrofit(OkHttpClient okHttp) {
-        return new Retrofit.Builder()
-                .addCallAdapterFactory(RxJava2CallAdapterFactory.create())
-                .addConverterFactory(MoshiConverterFactory.create())
-                .client(okHttp)
-                .baseUrl("https://dog.ceo/api/")
-                .build();
-    }
-
-    @Provides
-    public static DogsService provideDogService(Retrofit retrofit) {
-        return retrofit.create(DogsService.class);
-    }
 }
