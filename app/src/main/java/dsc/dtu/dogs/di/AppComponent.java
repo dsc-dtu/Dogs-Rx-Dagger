@@ -2,6 +2,8 @@ package dsc.dtu.dogs.di;
 
 import dagger.Component;
 import dsc.dtu.dogs.MainActivity;
+import dsc.dtu.dogs.MainViewModelFactory;
+import dsc.dtu.dogs.api.RandomImagesUseCase;
 
 /**
  * A Dagger component to initialize the object graph.
@@ -16,4 +18,7 @@ public interface AppComponent {
 
     void inject(MainActivity mainActivity);
 
+    RandomImagesUseCase randomImagesUseCase();
+
+    MainViewModelFactory mainViewModelFactory();
 }

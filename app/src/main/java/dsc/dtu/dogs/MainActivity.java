@@ -40,7 +40,7 @@ public class MainActivity extends AppCompatActivity {
         setupViewModel();
         subscribeToImages();
 
-        mainViewModel.fetchImages();
+        mainViewModel.fetchImages(50);
     }
 
     @Override

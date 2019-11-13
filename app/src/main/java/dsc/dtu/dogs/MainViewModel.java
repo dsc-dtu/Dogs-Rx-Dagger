@@ -43,9 +43,8 @@ public class MainViewModel extends ViewModel {
         this.dogImages.onNext(Collections.emptyList());
     }
 
-    public void fetchImages() {
-
-        Disposable disposable = usecase.getRandomImages(20)
+    public void fetchImages(int count) {
+        Disposable disposable = usecase.getRandomImages(count)
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(
                         image -> {
